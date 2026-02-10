@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hái Lộc Đầu Xuân - Lắc Mai Đùng Đùng</title>
+    
+    <!-- Logo trình duyệt (Favicon) hình bao lì xì -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧧</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;700&display=swap');
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle, #ff4d4d 0%, #800000 100%);
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .tet-font {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Pháo hoa background */
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px #fff, 0 0 20px 5px #ff0;
+            animation: firework-boom 2s infinite;
+            opacity: 0;
+        }
+
+        @keyframes firework-boom {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(20); opacity: 0; }
+        }
+
+        /* Hiệu ứng rung cây */
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(-4deg); }
+            40% { transform: rotate(4deg); }
+            60% { transform: rotate(-4deg); }
+            80% { transform: rotate(4deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .shaking {
+            animation: shake 0.4s ease-in-out infinite;
+        }
+
+        /* Lì xì rơi */
+        .lixi-falling {
+            position: absolute;
+            font-size: 2.5rem;
+            pointer-events: none;
+            z-index: 50;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Trang trí */
+        .decoration {
+            position: absolute;
+            font-size: 3rem;
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.3));
+            animation: float 4s ease-in-out infinite alternate;
+            z-index: 10;
+        }
+
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+
+        .lantern {
+            position: absolute;
+            top: -10px;
+            width: 50px;
+            animation: swing 3s ease-in-out infinite alternate;
+            transform-origin: top center;
+            z-index: 30;
+        }
+
+        @keyframes swing {
+            from { transform: rotate(-15deg); }
+            to { transform: rotate(15deg); }
+        }
+
+        /* Card kết quả */
+        .card-enter {
+            animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nhạc nền (Hidden Youtube Iframe) -->
+    <div id="player" style="display:none"></div>
+    <div class="music-btn shadow-lg" id="toggle-music" title="Bật/Tắt Nhạc">
+        <span id="music-icon" class="text-2xl">🔇</span>
+    </div>
+
+    <!-- Trang trí pháo hoa -->
+    <div class="firework" style="top: 20%; left: 20%; animation-delay: 0.5s;"></div>
+    <div class="firework" style="top: 15%; right: 25%; animation-delay: 1.2s;"></div>
+    <div class="firework" style="bottom: 30%; left: 10%; animation-delay: 0.8s;"></div>
+
+    <!-- Trang trí các yếu tố Tết -->
+    <div class="decoration" style="top: 10%; left: 5%;">🧨</div>
+    <div class="decoration" style="top: 50%; left: 2%; animation-delay: 1s;">🍲</div>
+    <div class="decoration" style="top: 15%; right: 5%; animation-delay: 0.5s;">🐎</div>
+    <div class="decoration" style="bottom: 10%; right: 5%; animation-delay: 1.5s;">👘</div>
+    <div class="decoration" style="bottom: 5%; left: 8%;">🎋</div>
+
+    <!-- Lồng đèn -->
+    <div class="lantern" style="left: 15%;">
+        <svg viewBox="0 0 100 120"><circle cx="50" cy="50" r="40" fill="#ff0000" stroke="#ffd700" stroke-width="2"/><rect x="45" y="90" width="10" height="20" fill="#ffd700"/><line x1="50" y1="0" x2="50" y2="10" stroke="#ffd700" stroke-width="3"/></svg>
+    </div>
+    <div class="lantern" style="right: 15%;">
+        <svg viewBox="0 0 100 120"><circle cx="50" cy="50" r="40" fill="#ff0000" stroke="#ffd700" stroke-width="2"/><rect x="45" y="90" width="10" height="20" fill="#ffd700"/><line x1="50" y1="0" x2="50" y2="10" stroke="#ffd700" stroke-width="3"/></svg>
+    </div>
+
+    <div class="container mx-auto px-4 text-center z-20">
+        <!-- Giao diện chính -->
+        <div id="game-screen" class="flex flex-col items-center">
+            <h1 class="text-4xl md:text-6xl text-yellow-300 tet-font mb-2 drop-shadow-lg">Hái lộc đầu xuân - Lắc mai đùng đùng</h1>
+            <p class="text-white text-lg mb-6 bg-red-700 bg-opacity-50 px-4 py-1 rounded-full border border-yellow-400">
+                😊 1 nụ cười = 1 lần lắc mai ✨
+            </p>
+            
+            <!-- Cây Mai Xum Xuê -->
+            <div id="mai-tree" class="relative w-72 h-72 md:w-[450px] md:h-[450px] mb-8 transition-transform duration-300 cursor-pointer">
+                <svg viewBox="0 0 200 200" class="w-full h-full filter drop-shadow-2xl">
+                    <path d="M100 190 Q100 140 100 100 T120 40" stroke="#4e342e" stroke-width="10" fill="none" stroke-linecap="round"/>
+                    <path d="M100 160 Q70 140 40 150" stroke="#4e342e" stroke-width="7" fill="none" stroke-linecap="round"/>
+                    <path d="M100 160 Q130 140 160 150" stroke="#4e342e" stroke-width="7" fill="none" stroke-linecap="round"/>
+                    <path d="M100 120 Q60 90 30 100" stroke="#5d4037" stroke-width="6" fill="none" stroke-linecap="round"/>
+                    <path d="M100 120 Q140 90 170 100" stroke="#5d4037" stroke-width="6" fill="none" stroke-linecap="round"/>
+                    <path d="M110 80 Q150 50 140 20" stroke="#5d4037" stroke-width="5" fill="none" stroke-linecap="round"/>
+                    <path d="M90 80 Q50 50 60 20" stroke="#5d4037" stroke-width="5" fill="none" stroke-linecap="round"/>
+                    
+                    <g fill="#FFD700" stroke="#FFEB3B" stroke-width="0.5">
+                        <circle cx="120" cy="40" r="6"/><circle cx="40" cy="150" r="7"/><circle cx="160" cy="150" r="7"/>
+                        <circle cx="30" cy="100" r="6"/><circle cx="170" cy="100" r="6"/><circle cx="140" cy="20" r="5"/>
+                        <circle cx="60" cy="20" r="5"/><circle cx="100" cy="100" r="8"/><circle cx="80" cy="130" r="6"/>
+                        <circle cx="120" cy="130" r="6"/><circle cx="70" cy="70" r="7"/><circle cx="130" cy="70" r="7"/>
+                        <circle cx="100" cy="40" r="6"/><circle cx="100" cy="150" r="5"/><circle cx="50" cy="120" r="6"/>
+                        <circle cx="150" cy="120" r="6"/><circle cx="120" cy="90" r="5"/><circle cx="80" cy="90" r="5"/>
+                    </g>
+
+                    <g fill="#d32f2f">
+                        <rect x="35" y="150" width="8" height="12" rx="1"/><rect x="155" y="150" width="8" height="12" rx="1"/>
+                        <rect x="25" y="100" width="8" height="12" rx="1"/><rect x="165" y="100" width="8" height="12" rx="1"/>
+                        <rect x="65" y="65" width="8" height="12" rx="1"/><rect x="125" y="65" width="8" height="12" rx="1"/>
+                        <rect x="95" y="35" width="8" height="12" rx="1"/>
+                    </g>
+                </svg>
+                <div class="absolute bottom-4 right-4 text-5xl">🐎</div>
+            </div>
+
+            <button id="shake-btn" class="bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-red-800 font-bold py-4 px-10 rounded-full text-2xl shadow-[0_0_20px_rgba(255,215,0,0.5)] transform active:scale-95 transition-all mb-4">
+                🧧 NHẤN ĐỂ LẮC MAI
+            </button>
+        </div>
+
+        <!-- Màn hình hiện bao lì xì -->
+        <div id="lixi-screen" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
+            <div class="flex flex-col items-center">
+                <div id="single-lixi" class="w-56 h-80 bg-red-600 rounded-xl border-4 border-yellow-400 shadow-[0_0_50px_rgba(255,0,0,0.5)] flex flex-col items-center justify-center cursor-pointer transform hover:rotate-3 transition-transform relative overflow-hidden">
+                    <div class="absolute top-0 w-full h-16 bg-red-700 rounded-b-[50%] border-b-2 border-yellow-500"></div>
+                    <span class="text-7xl mb-4 animate-bounce">🧧</span>
+                    <p class="text-yellow-300 font-bold tet-font text-3xl">Lộc Xuân</p>
+                    <div class="mt-4 text-yellow-200 text-sm italic">Click để khui ngay!</div>
+                </div>
+                <button id="open-btn" class="mt-10 bg-yellow-400 text-red-800 font-black py-3 px-10 rounded-full text-xl shadow-xl hover:bg-white transition-all">
+                    ✨ KHUI BAO LÌ XÌ ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- Màn hình kết quả -->
+        <div id="result-screen" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 z-[60] p-4">
+            <div class="bg-white max-w-sm w-full p-8 rounded-2xl shadow-2xl border-t-[12px] border-red-600 relative card-enter text-center">
+                <button id="close-btn" class="absolute top-2 right-4 text-gray-400 text-3xl">&times;</button>
+                <div id="result-icon" class="text-6xl mb-4">✨</div>
+                <h2 id="result-title" class="text-3xl font-bold text-red-700 mb-2 tet-font">Chủ đề</h2>
+                <div class="w-24 h-1 bg-yellow-400 mx-auto my-4 rounded-full"></div>
+                <p id="result-message" class="text-gray-800 text-xl font-medium leading-relaxed italic px-2">
+                    "Lời chúc ngẫu nhiên sẽ xuất hiện ở đây."
+                </p>
+                <button id="reset-btn" class="mt-8 w-full bg-red-600 text-white font-bold py-4 rounded-xl hover:bg-red-700 shadow-lg transition-all text-lg">
+                    Lắc Thêm Lần Nữa 🧧
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- LOGIC NHẠC ---
+        let isPlaying = false;
+        let player;
+
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: 'w07Mad_hPV8',
+                playerVars: {
+                    'autoplay': 0,
+                    'loop': 1,
+                    'playlist': 'w07Mad_hPV8'
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            const toggleBtn = document.getElementById('toggle-music');
+            const icon = document.getElementById('music-icon');
+
+            toggleBtn.addEventListener('click', () => {
+                if (isPlaying) {
+                    player.pauseVideo();
+                    icon.innerText = '🔇';
+                } else {
+                    player.playVideo();
+                    icon.innerText = '🎵';
+                }
+                isPlaying = !isPlaying;
+            });
+        }
+
+        // --- LOGIC GAME VỚI ĐA DẠNG LỜI CHÚC ---
+        const categories = [
+            {
+                type: 'Tình Duyên',
+                icon: '💖',
+                messages: [
+                    "Người đang loay hoay rồi sẽ gặp được ý trung nhân, chớ có vội vàng. Người đã thành đôi tình cảm sẽ thêm mặn nồng, những hiểu lầm & mâu thuẫn đều dễ dàng được hóa giải!",
+                    "Vận đào hoa nở rộ, người cũ không rủ cũng tới, người mới chủ động làm quen. Một năm nồng cháy đang chờ đó nha!",
+                    "Tình duyên phơi phới, sớm tìm thấy nửa kia tâm đầu ý hợp, 'chốt đơn' ngay trong năm nay!",
+                    "Người ấy đang ở rất gần bạn đấy thôi, chỉ cần bạn mở lòng và tự tin hơn là hạnh phúc sẽ mỉm cười."
+                ]
+            },
+            {
+                type: 'Sự Nghiệp',
+                icon: '🚀',
+                messages: [
+                    "Công danh dần rạng rỡ sáng tỏ, làm việc gì cũng thuận buồm xuôi gió, gặp được quý nhân phù trợ nhìn nhận nỗ lực của bạn.",
+                    "Thăng quan tiến chức vèo vèo, sếp thương đồng nghiệp quý, lương tăng đều đặn như mong đợi.",
+                    "Mọi dự định ấp ủ bấy lâu nay sẽ gặt hái được quả ngọt. Sự kiên trì của bạn sẽ được đền đáp xứng đáng!",
+                    "Sự nghiệp khởi sắc, vươn tầm cao mới, khẳng định được vị thế và tài năng của bản thân trong môi trường mới."
+                ]
+            },
+            {
+                type: 'Sức Khỏe',
+                icon: '💪',
+                messages: [
+                    "Cả năm dẻo dai như ngựa chiến, tâm hồn thư thái, năng lượng tích cực tràn trề mỗi ngày.",
+                    "Ăn ngon ngủ kỹ, tinh thần minh mẫn, cả năm không lo ốm vặt, vạn sự hanh thông.",
+                    "Sức khỏe dồi dào là nền tảng cho mọi thành công. Hãy tiếp tục duy trì thói quen tốt này nhé!",
+                    "Một năm khỏe mạnh, bền bỉ để chinh phục mọi mục tiêu đề ra, năng lượng luôn ở mức 100%."
+                ]
+            },
+            {
+                type: 'Tiền Tài',
+                icon: '💰',
+                messages: [
+                    "Tiền vào như nước sông Đà, tiền ra nhỏ giọt như cà phê phin. Cả năm ví luôn căng phồng chắc nịch!",
+                    "Tài lộc tràn vào đầy nhà, lộc lá từ trên trời rơi xuống, trúng số hay thưởng lớn đều có phần của bạn.",
+                    "Đầu tư sinh lời, kinh doanh đắc lợi, tiền bạc rủng rỉnh giúp bạn thực hiện mọi dự định lớn.",
+                    "Tiền bạc dồi dào, không chỉ đủ chi tiêu mà còn tích lũy được một khoản kha khá cuối mỗi tháng."
+                ]
+            },
+            {
+                type: 'Thành Công',
+                icon: '🏆',
+                messages: [
+                    "Mọi ước mơ sẽ thành hiện thực. Sự kiên trì và nỗ lực âm thầm của bạn sẽ gặt hái được thành quả vĩ đại!",
+                    "Vạn sự như ý, tỷ sự như mơ. Năm nay là năm của bạn, hãy tự tin thực hiện những điều lớn lao và đừng chần chờ nữa nha.",
+                    "Thành công gõ cửa báo hiệu đây là thời điểm mọi kế hoạch bạn đặt ra đều đạt được kết quả vượt mong đợi.",
+                    "Dấu ấn cá nhân được khẳng định, bạn sẽ trở thành nguồn cảm hứng cho những người xung quanh học hỏi và phát triển."
+                ]
+            },
+            {
+                type: 'Bình An',
+                icon: '🌸',
+                messages: [
+                    "Gia đình hòa thuận, tiếng cười rộn vang, vạn sự hanh thông, niềm vui gõ cửa mỗi ngày.",
+                    "Một năm bình an, tâm hồn thanh tịnh, mọi khó khăn đều hóa nhẹ nhàng như làn gió xuân.",
+                    "Hạnh phúc không đâu xa, chính là sự bình yên trong tâm hồn và sự sum vầy của gia đình bạn. Hãy trân quý điều đó nha.",
+                    "Vận hạn xua tan, may mắn tràn về, một năm an nhiên tự tại đang đón chờ bạn."
+                ]
+            },
+            {
+                type: 'Học vấn',
+                icon: '🎓',
+                messages: [
+                    "Đầu tư cho việc học chưa bao giờ là quyết định sai lầm. Sau khi đạt kết quả tốt, sẽ còn nhận được nhiều cơ hội đến từ việc học.",
+                    "Kiến thức hanh thông giữ cho trí tuệ minh mẫn, mọi kỳ thi đều vượt qua nhẹ nhàng như gió xuân.",
+                    "Con đường học vấn rộng mở, gặp được thầy giỏi bạn hiền dẫn dắt tiến bộ không ngừng.",
+                    "Tư duy đột phá, sáng tạo vượt bậc, gặt hái nhiều bằng khen và giải thưởng danh giá.",
+                    "Học tập say mê, tiếp thu nhanh chóng, sớm hoàn thành ước nguyện về bằng cấp cao hơn đầy thuận lợi và rạng rỡ."
+                ]
+            }
+        ];
+
+        const shakeBtn = document.getElementById('shake-btn');
+        const maiTree = document.getElementById('mai-tree');
+        const lixiScreen = document.getElementById('lixi-screen');
+        const singleLixi = document.getElementById('single-lixi');
+        const openBtn = document.getElementById('open-btn');
+        const resultScreen = document.getElementById('result-screen');
+        const resetBtn = document.getElementById('reset-btn');
+        const closeBtn = document.getElementById('close-btn');
+
+        function createFallingLixi() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const lixi = document.createElement('div');
+                    lixi.className = 'lixi-falling';
+                    lixi.innerText = '🧧';
+                    lixi.style.left = Math.random() * 100 + 'vw';
+                    lixi.style.top = '-50px';
+                    lixi.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                    document.body.appendChild(lixi);
+                    setTimeout(() => lixi.remove(), 3500);
+                }, i * 150);
+            }
+        }
+
+        const handleShake = () => {
+            if (!isPlaying && player && player.playVideo) {
+                player.playVideo();
+                document.getElementById('music-icon').innerText = '🎵';
+                isPlaying = true;
+            }
+
+            maiTree.classList.add('shaking');
+            createFallingLixi();
+            shakeBtn.disabled = true;
+            shakeBtn.innerText = 'ĐANG LẮC LỘC...';
+
+            setTimeout(() => {
+                maiTree.classList.remove('shaking');
+                lixiScreen.classList.remove('hidden');
+                shakeBtn.disabled = false;
+                shakeBtn.innerText = '🧧 NHẤN ĐỂ LẮC MAI';
+            }, 2500);
+        };
+
+        shakeBtn.addEventListener('click', handleShake);
+        maiTree.addEventListener('click', handleShake);
+
+        function openLixi() {
+            const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+            const randomMessage = randomCategory.messages[Math.floor(Math.random() * randomCategory.messages.length)];
+            
+            document.getElementById('result-title').innerText = `Về ${randomCategory.type}`;
+            document.getElementById('result-icon').innerText = randomCategory.icon;
+            document.getElementById('result-message').innerText = `"${randomMessage}"`;
+            resultScreen.classList.remove('hidden');
+        }
+
+        singleLixi.addEventListener('click', openLixi);
+        openBtn.addEventListener('click', openLixi);
+
+        function resetGame() {
+            resultScreen.classList.add('hidden');
+            lixiScreen.classList.add('hidden');
+        }
+
+        resetBtn.addEventListener('click', resetGame);
+        closeBtn.addEventListener('click', resetGame);
+    </script>
+</body>
+</html>
